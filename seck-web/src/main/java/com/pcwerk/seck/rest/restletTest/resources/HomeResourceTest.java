@@ -10,6 +10,7 @@ import org.restlet.data.Form;
 import org.restlet.data.MediaType;
 import org.restlet.ext.freemarker.TemplateRepresentation;
 import org.restlet.representation.Representation;
+import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.Get;
 import org.restlet.resource.Post;
 import org.restlet.resource.ServerResource;
@@ -17,17 +18,15 @@ import org.restlet.resource.ServerResource;
 import com.pcwerk.seck.rest.restletTest.SeckWebRestletAppTest;
 
 public class HomeResourceTest extends ServerResource {
-	@Get("json:json")
-	public Representation getEntries(Representation r) {
+	@Get
+	public Representation getEntries(Representation entity) {
 
 		if (this.getQuery().isEmpty()
 				|| (!this.getQuery().isEmpty() && this.getQuery()
 						.getFirstValue("user_input").equals(""))) {
 			return toRepresentation(null, "home.jsp", MediaType.TEXT_HTML);
 
-		}
-		Map<String, Object> map = new HashMap<String, Object>();
-
+		}		
 		JSONObject js0 = new JSONObject();
 		JSONArray jsArray = new JSONArray();
 		try {
@@ -54,10 +53,10 @@ public class HomeResourceTest extends ServerResource {
 			e.printStackTrace();
 		}
 
-		map.put("jsArray", jsArray);
-
-		return toRepresentation(map, "results.jsp", MediaType.TEXT_HTML);
-
+		return new StringRepresentation(jsArray.toString(), MediaType.APPLICATION_JSON);	
+			
+		
+		
 	}
 
 	/*
